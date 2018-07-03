@@ -22,7 +22,7 @@ function createNewDeck() {
     let newDeck = '';
     deck.forEach((card) => {
         let newCard = `<li class="card"> <i class="fa ${card}"></i> </li>`;
-        console.log(newCard);
+        //console.log(newCard);
         newDeck += newCard;
     });
 
@@ -61,55 +61,59 @@ createNewDeck();
  *    + increment the move counter and display it on the page (put this functionality in another function that you call from this one)
  *    + if all cards have matched, display a message with the final score (put this functionality in another function that you call from this one)
  */
-// openCards is used to keep track of the 2 cards selected during a turn
-let openCards = [];
-let cardsMatch = false; // Flag to indicate if selected cards match
-let cards = document.querySelectorAll(".card");
+resetMatchGame();
 
-// Card flipping
-//  'open' class changes card's background color
-//  'show' class causes icon to be displayed
-cards.forEach(function (card) {
-    card.addEventListener('click', function (e) {
-        // First check if card has already been clicked on during this turn or already matched
-        if ((card.classList.contains('open') && card.classList.contains('show')) ||
-            card.classList.contains('match')) {
-            // Card is already exposed.  Return
-            return;
-        }
+function resetMatchGame() {
+    // openCards is used to keep track of the 2 cards selected during a turn
+    let openCards = [];
+    let cardsMatch = false; // Flag to indicate if selected cards match
+    let cards = document.querySelectorAll(".card");
 
-        if (openCards.length === 0) {
-            card.classList.add('open', 'show');
-            openCards.push(card);
-        } else if (openCards.length === 1) {
-            card.classList.add('open', 'show');
-            openCards.push(card);
-
-            // Now need to check for match
-            let image1 = getImage(openCards[0].querySelector('i'));
-            console.log('image1 = ' + image1);
-            let image2 = getImage(openCards[1].querySelector('i'));
-            console.log('image2 = ' + image2);
-            if (image1 == image2) {
-                // Match!
-                openCards[0].classList.add('match');
-                openCards[1].classList.add('match');
-                openCards.splice(0, 2);
-            } else {
-
-                // Cards don't match.  Close them after 5 seconds
-                setTimeout(function () {
-                        openCards.forEach(function (card) {
-                            card.classList.remove('open', 'show');
-                        }); // end openCards.forEach
-                        openCards.splice(0, 2);
-                    }, // End timeout function
-                    1000); // end setTimeout
+    // Card flipping
+    //  'open' class changes card's background color
+    //  'show' class causes icon to be displayed
+    cards.forEach(function (card) {
+        card.addEventListener('click', function (e) {
+            // First check if card has already been clicked on during this turn or already matched
+            if ((card.classList.contains('open') && card.classList.contains('show')) ||
+                card.classList.contains('match')) {
+                // Card is already exposed.  Return
+                return;
             }
-        }
 
-    }); // end addEventListener 'click'
-})
+            if (openCards.length === 0) {
+                card.classList.add('open', 'show');
+                openCards.push(card);
+            } else if (openCards.length === 1) {
+                card.classList.add('open', 'show');
+                openCards.push(card);
+
+                // Now need to check for match
+                let image1 = getImage(openCards[0].querySelector('i'));
+                //console.log('image1 = ' + image1);
+                let image2 = getImage(openCards[1].querySelector('i'));
+                //console.log('image2 = ' + image2);
+                if (image1 == image2) {
+                    // Match!
+                    openCards[0].classList.add('match');
+                    openCards[1].classList.add('match');
+                    openCards.splice(0, 2);
+                } else {
+
+                    // Cards don't match.  Close them after 5 seconds
+                    setTimeout(function () {
+                            openCards.forEach(function (card) {
+                                card.classList.remove('open', 'show');
+                            }); // end openCards.forEach
+                            openCards.splice(0, 2);
+                        }, // End timeout function
+                        1000); // end setTimeout
+                }
+            }
+
+        }); // end addEventListener 'click'
+    })
+}
 
 // getImage gets the class name for the image in the card
 function getImage(icon) {
@@ -124,9 +128,10 @@ function getImage(icon) {
 }
 
 // Reset game
-let reset = document.querySelector('.restart');
-reset.addEventListener('click', function() {
+let restart = document.querySelector('.restart');
+restart.addEventListener('click', function() {
     openCards = [];
     cards = null;
     createNewDeck();
+    resetMatchGame();
 })
