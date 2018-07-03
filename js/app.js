@@ -145,12 +145,25 @@ function resetMatchGame() {
     })
 }
 
+// Timer
+let counter = 0;
+let gameTimer = setInterval(myTimer, 1000);
+
+function myTimer() {
+    counter++;
+    // Supposedly, (5+'') is faster than String(5) on Chrome for converting numbers to strings.
+    let min=(Math.trunc(counter/60)+ '');
+    let sec=(counter%60 + '')
+    document.getElementById("timer").innerText = min + ':' + sec.padStart(2,'0');
+}
+
 // Restart game
 let restart = document.querySelector('.restart');
 restart.addEventListener('click', function () {
     console.log('Restarting game');
     openCards = [];
     cards = null;
+    clearInterval(gameTimer);
     createNewDeck();
     resetMatchGame();
 })
