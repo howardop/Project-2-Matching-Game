@@ -1,9 +1,10 @@
 /*
  * Create a list that holds all of your cards
  */
-let deck = ["fa-diamond", 'fa-diamond', 'fa-paper-plane-o', 'fa-paper-plane-o',                           'fa-anchor', 'fa-anchor', 'fa-bolt', 'fa-bolt',
-                     'fa-cube', 'fa-cube', 'fa-leaf', 'fa-leaf',
-                     'fa-bicycle', 'fa-bicycle', 'fa-bomb', 'fa-bomb']
+let deck = ["fa-diamond", 'fa-diamond', 'fa-paper-plane-o', 'fa-paper-plane-o', 'fa-anchor', 'fa-anchor', 'fa-bolt', 'fa-bolt',
+    'fa-cube', 'fa-cube', 'fa-leaf', 'fa-leaf',
+    'fa-bicycle', 'fa-bicycle', 'fa-bomb', 'fa-bomb'
+]
 
 /*
  * Display the cards on the page
@@ -11,24 +12,33 @@ let deck = ["fa-diamond", 'fa-diamond', 'fa-paper-plane-o', 'fa-paper-plane-o', 
  *   - loop through each card and create its HTML
  *   - add each card's HTML to the page
  */
-let template =  '<li class="card">' + 
-'<i class="fa fa-bomb"></i>' + 
-'</li>';
 
 function createNewDeck() {
     shuffle(deck);
 
-    // Now create HTML for each card in deck, and add it to the new deck.
+    // Now create HTML for each card in deck, and add it to the new deck.  Using HTML // data-* attribute for image to make match checking easer
     let newDeck = '';
+
     deck.forEach((card) => {
-        let newCard = `<li class="card"> <i class="fa ${card}"></i> </li>`;
+        let newCard = `<li class="card" data-image="${card}"> <i class="fa ${card}"></i> </li>`;
         //console.log(newCard);
         newDeck += newCard;
     });
 
+    /* The following code builds the new deck just like the forEach loop above, but
+     *    uses map instead
+    let deck2  = deck.map((card) => {
+        let newCard = `<li class="card" data-image="${card}"> <i class="fa ${card}"></i> </li>`;
+        console.log(newCard);
+        return newCard;
+    }
+    );
+    newDeck = deck2.join('');
+    */
+
     // Put the deck just created into the proper spot in the DOM
     let ulDeck = document.querySelector('ul.deck');
-    ulDeck.innerHTML=newDeck;
+    ulDeck.innerHTML = newDeck;
 }
 
 // Shuffle function from http://stackoverflow.com/a/2450976
@@ -68,6 +78,15 @@ function resetMatchGame() {
     let openCards = [];
     let cardsMatch = false; // Flag to indicate if selected cards match
     let cards = document.querySelectorAll(".card");
+    let matches = 0;
+    let moves = 0;
+    const moveCounterTag = document.querySelector('.moves');
+    moveCounterTag.innerText = moves;
+
+    // Add 3 stars to score panel
+    const threeStars = '<li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li>';
+    document.querySelector('.stars').innerHTML = threeStars;
+
 
     // Card flipping
     //  'open' class changes card's background color
@@ -83,29 +102,40 @@ function resetMatchGame() {
 
             if (openCards.length === 0) {
                 card.classList.add('open', 'show');
+                moveCounterTag.innerText = ++moves;
                 openCards.push(card);
             } else if (openCards.length === 1) {
                 card.classList.add('open', 'show');
+                moveCounterTag.innerText = ++moves;
                 openCards.push(card);
+                // Check to see if any stars need to be removed
+                //   Remove 1 after 10 moves
+                //   Remove the 2nd after 20 moves
+                //   Always keep 1 star
+                if (moves == 20 || moves == 40) {
+                    document.querySelector('.fa-star').classList.remove('fa-star');
+                };
 
-                // Now need to check for match
-                let image1 = getImage(openCards[0].querySelector('i'));
-                //console.log('image1 = ' + image1);
-                let image2 = getImage(openCards[1].querySelector('i'));
-                //console.log('image2 = ' + image2);
-                if (image1 == image2) {
+                // Now need to check for match using HTML data-* attribute              
+                if (openCards[0].dataset.image == openCards[1].dataset.image) {
                     // Match!
                     openCards[0].classList.add('match');
                     openCards[1].classList.add('match');
-                    openCards.splice(0, 2);
-                } else {
+                    matches += 1;
+                    openCards = [];
 
-                    // Cards don't match.  Close them after 5 seconds
+
+                    // Check to see if all matches found
+                    if (matches == deck.length / 2) {
+                        alert('You Win!!!!');
+                    }
+                } else {
+                    // Cards don't match.  Close them after 1 seconds
                     setTimeout(function () {
                             openCards.forEach(function (card) {
                                 card.classList.remove('open', 'show');
                             }); // end openCards.forEach
-                            openCards.splice(0, 2);
+                            openCards = [];
                         }, // End timeout function
                         1000); // end setTimeout
                 }
@@ -115,21 +145,10 @@ function resetMatchGame() {
     })
 }
 
-// getImage gets the class name for the image in the card
-function getImage(icon) {
-    let classes = icon.classList;
-    //Search classes array for class that begins with 'fa-' that is the image name
-    for (let i = 0; i < classes.length; i++) {
-        if (classes[i].search('fa-') >= 0) {
-            return classes[i]
-        }
-    }
-    return null;
-}
-
-// Reset game
+// Restart game
 let restart = document.querySelector('.restart');
-restart.addEventListener('click', function() {
+restart.addEventListener('click', function () {
+    console.log('Restarting game');
     openCards = [];
     cards = null;
     createNewDeck();
