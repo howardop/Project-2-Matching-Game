@@ -1,16 +1,24 @@
 //Global variables
 // Timer
-let moveCounter = 0;        // 
+let moveCounter = 0; // 
 let gameTimer = null;
 
 /*
  * Create a list that holds all of your cards
  */
-let deck = ["fa-diamond", 'fa-diamond', 'fa-paper-plane-o', 'fa-paper-plane-o', 'fa-anchor', 'fa-anchor', 'fa-bolt', 'fa-bolt',
+let deck = ["fa-diamond", 'fa-diamond', 'fa-paper-plane-o', 'fa-paper-plane-o',
+    'fa-anchor', 'fa-anchor', 'fa-bolt', 'fa-bolt',
     'fa-cube', 'fa-cube', 'fa-leaf', 'fa-leaf',
     'fa-bicycle', 'fa-bicycle', 'fa-bomb', 'fa-bomb'
 ]
 
+createNewDeck();
+
+resetMatchGame();
+
+/******************************************************************************/
+/*                              Global Functions                              */
+/******************************************************************************/
 /*
  * Display the cards on the page
  *   - shuffle the list of cards using the provided "shuffle" method below
@@ -68,8 +76,6 @@ function shuffle(array) {
 }
 
 
-createNewDeck();
-
 
 /*
  * set up the event listener for a card. If a card is clicked:
@@ -81,7 +87,7 @@ createNewDeck();
  *    + increment the move counter and display it on the page (put this functionality in another function that you call from this one)
  *    + if all cards have matched, display a message with the final score (put this functionality in another function that you call from this one)
  */
-resetMatchGame();
+
 
 function resetMatchGame() {
     // openCards is used to keep track of the 2 cards selected during a turn
@@ -114,22 +120,25 @@ function resetMatchGame() {
             }
 
             if (openCards.length === 0) {
+                // 1st card selected
                 card.classList.add('open', 'show');
                 moveCounterTag.innerText = ++moves;
                 openCards.push(card);
             } else if (openCards.length === 1) {
+                // 2nd card selected
                 card.classList.add('open', 'show');
                 moveCounterTag.innerText = ++moves;
                 openCards.push(card);
                 // Check to see if any stars need to be removed
-                //   Remove 1 after 10 moves
-                //   Remove the 2nd after 20 moves
+                //   Remove 1 after 30 moves
+                //   Remove the 2nd after 50 moves
                 //   Always keep 1 star
+                // Eliminate star from view by removing fa-star class from element.  
                 if (moves == 30 || moves == 50) {
                     document.querySelector('.fa-star').classList.remove('fa-star');
                 };
 
-                // Now need to check for match using HTML data-* attribute              
+                // Check for match using HTML data-* attribute              
                 if (openCards[0].dataset.image == openCards[1].dataset.image) {
                     // Match!
                     openCards[0].classList.add('match');
@@ -139,6 +148,7 @@ function resetMatchGame() {
 
 
                     // Check to see if all matches found
+                    // If so, bring up congratulatory popup
                     if (matches == deck.length / 2) {
                         console.log('You win');
                         clearInterval(gameTimer);
@@ -163,38 +173,35 @@ function resetMatchGame() {
     })
 }
 
-// Timer
-moveCounter = 0;
-gameTimer = setInterval(myTimer, 1000);
 
+// Manage the game timer
 function myTimer() {
     moveCounter++;
     // Supposedly, (5+'') is faster than String(5) on Chrome for converting numbers to strings.
-    let min=(Math.trunc(moveCounter/60)+ '');
-    let sec=(moveCounter%60 + '')
-    document.getElementById("timer").innerText = min + ':' + sec.padStart(2,'0');
+    let min = (Math.trunc(moveCounter / 60) + '');
+    let sec = (moveCounter % 60 + '')
+    document.getElementById("timer").innerText = min + ':' + sec.padStart(2, '0');
 }
 
-// Restart game
+// Manage the Restart Game button
 let restart = document.querySelector('.restart');
 restart.addEventListener('click', function () {
     console.log('Restarting game');
-    openCards = [];
     cards = null;
     clearInterval(gameTimer);
+    moveCounter = 0;
     createNewDeck();
     resetMatchGame();
-    moveCounter = 0;
 })
 
-// Add event listener to "Play Again" button to create new game
-document.querySelector('#newGame').addEventListener('click', function() {
+// Add event listener to "Play Again" button to create new game when Play Again button
+// on congratulatory popup is clicked
+document.querySelector('#newGame').addEventListener('click', function () {
     console.log('Play Again button pressed');
-    openCards = [];
     cards = null;
     clearInterval(gameTimer);
-    document.getElementById("timer").innerText = '0:00';
+    moveCounter = 0;
     createNewDeck();
     resetMatchGame();
-    moveCounter = 0;
+
 })

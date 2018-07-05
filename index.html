@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8">
     <title>Matching Game</title>
@@ -12,8 +13,9 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <link rel='stylesheet' href='css/modal.css'>
-  
+
 </head>
+
 <body>
 
     <div class="container">
@@ -22,9 +24,9 @@
         </header>
 
         <section class="score-panel">
-        	<ul class="stars">
-        		
-        	</ul>
+            <ul class="stars">
+                
+            </ul>
 
             <span class="moves">0</span> Moves
             <span id='elapsedTime'>Elapsed Time:
@@ -32,8 +34,8 @@
             </span>
 
             <div class="restart">
-        		<i class="fa fa-repeat"></i>
-        	</div>
+                <i class="fa fa-repeat"></i>
+            </div>
         </section>
 
         <ul class="deck">
@@ -42,35 +44,35 @@
 
     <!-- Following container sets up the modal that appears when player wins-->
     <div class="container">
-                <!-- Modal -->
-            <div class="modal fade" id="myModal" role="dialog">
-              <div class="modal-dialog">
-              
+        <!-- Modal -->
+        <div class="modal fade" id="myModal" role="dialog">
+            <div class="modal-dialog">
+
                 <!-- Modal content-->
                 <div class="modal-content">
-                  <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">x</button>
-                    <h2 class="modal-title">You Win!</h2>
-                  </div>
-                  <div class="modal-body">
-                      <div class='game-data'>
-                    
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">x</button>
+                        <h2 class="modal-title">You Win!</h2>
                     </div>
-                  </div>
-                  <div class="modal-footer">
-                      <div class='center-buttons'>
-                          <button id='newGame' type="button" class="btn btn-default" data-dismiss="modal">Play again?</button>
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <div class="modal-body">
+                        <div class='game-data'>
+
+                        </div>
                     </div>
-                  </div>
+                    <div class="modal-footer">
+                        <div class='center-buttons'>
+                            <button id='newGame' type="button" class="btn btn-default" data-dismiss="modal">Play again?</button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
                 </div>
-                
-              </div>
+
             </div>
-            
-          </div>
-          
-          <!-- Invoke modal programmatically 
+        </div>
+
+    </div>
+
+    <!-- Invoke modal programmatically 
           <script>
               setTimeout(function() {
                   $("#myModal").modal()
@@ -81,4 +83,5 @@
 
     <script src="js/app.js"></script>
 </body>
+
 </html>
