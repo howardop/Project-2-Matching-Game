@@ -1,6 +1,6 @@
 //Global variables
 // Timer
-let secondCounter = 0; // 
+let moveCounter = 0; // 
 let gameTimer = null;
 
 /*
@@ -176,10 +176,10 @@ function resetMatchGame() {
 
 // Manage the game timer
 function myTimer() {
-    secondCounter++;
+    moveCounter++;
     // Supposedly, (5+'') is faster than String(5) on Chrome for converting numbers to strings.
-    let min = (Math.trunc(secondCounter / 60) + '');
-    let sec = (secondCounter % 60 + '')
+    let min = (Math.trunc(moveCounter / 60) + '');
+    let sec = (moveCounter % 60 + '')
     document.getElementById("timer").innerText = min + ':' + sec.padStart(2, '0');
 }
 
@@ -189,7 +189,7 @@ restart.addEventListener('click', function () {
     console.log('Restarting game');
     cards = null;
     clearInterval(gameTimer);
-    secondCounter = 0;
+    moveCounter = 0;
     createNewDeck();
     resetMatchGame();
 })
@@ -200,7 +200,7 @@ document.querySelector('#newGame').addEventListener('click', function () {
     console.log('Play Again button pressed');
     cards = null;
     clearInterval(gameTimer);
-    secondCounter = 0;
+    moveCounter = 0;
     createNewDeck();
     resetMatchGame();
 
