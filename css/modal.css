@@ -1,0 +1,13 @@
+.modal-title{
+    text-align: center;
+    color: crimson;
+    font-size: 500%
+}
+
+.modal-footer {
+    text-align: center;
+}
+
+.game-data{
+    text-align: center;
+}

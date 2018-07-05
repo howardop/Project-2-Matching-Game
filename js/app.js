@@ -1,3 +1,8 @@
+//Global variables
+// Timer
+let moveCounter = 0;        // 
+let gameTimer = null;
+
 /*
  * Create a list that holds all of your cards
  */
@@ -16,15 +21,21 @@ let deck = ["fa-diamond", 'fa-diamond', 'fa-paper-plane-o', 'fa-paper-plane-o', 
 function createNewDeck() {
     shuffle(deck);
 
-    // Now create HTML for each card in deck, and add it to the new deck.  Using HTML // data-* attribute for image to make match checking easer
+    // Now create HTML for each card in deck, and add it to the new deck.  
+    // Using HTML data-* attribute to identify image on each card  to make match 
+    //   checking easer
     let newDeck = '';
 
+    // Loop through each card to create its HTML and append each card's HTML to newDeck.
+    // After loop completes, newDeck will be inserted into the DOM
     deck.forEach((card) => {
-        let newCard = `<li class="card" data-image="${card}"> <i class="fa ${card}"></i> </li>`;
+        // Added place-figure class because the bootstrap.min.css, added to support modals, moves the icons to the upper left corner.  place-figure is used to restore them to the center
+        let newCard = `<li class="card" data-image="${card}"> <i class="fa ${card} place-figure"></i> </li>`;
         //console.log(newCard);
         newDeck += newCard;
     });
 
+    /****************************************************************************** */
     /* The following code builds the new deck just like the forEach loop above, but
      *    uses map instead
     let deck2  = deck.map((card) => {
@@ -34,11 +45,10 @@ function createNewDeck() {
     }
     );
     newDeck = deck2.join('');
-    */
+    **********************************************************************************/
 
     // Put the deck just created into the proper spot in the DOM
-    let ulDeck = document.querySelector('ul.deck');
-    ulDeck.innerHTML = newDeck;
+    document.querySelector('ul.deck').innerHTML = newDeck;
 }
 
 // Shuffle function from http://stackoverflow.com/a/2450976
@@ -75,6 +85,7 @@ resetMatchGame();
 
 function resetMatchGame() {
     // openCards is used to keep track of the 2 cards selected during a turn
+    console.log('Entered resetMatchGame');
     let openCards = [];
     let cardsMatch = false; // Flag to indicate if selected cards match
     let cards = document.querySelectorAll(".card");
@@ -82,6 +93,8 @@ function resetMatchGame() {
     let moves = 0;
     const moveCounterTag = document.querySelector('.moves');
     moveCounterTag.innerText = moves;
+    document.getElementById("timer").innerText = '0:00';
+    gameTimer = setInterval(myTimer, 1000);
 
     // Add 3 stars to score panel
     const threeStars = '<li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li>';
@@ -112,7 +125,7 @@ function resetMatchGame() {
                 //   Remove 1 after 10 moves
                 //   Remove the 2nd after 20 moves
                 //   Always keep 1 star
-                if (moves == 20 || moves == 40) {
+                if (moves == 30 || moves == 50) {
                     document.querySelector('.fa-star').classList.remove('fa-star');
                 };
 
@@ -127,7 +140,12 @@ function resetMatchGame() {
 
                     // Check to see if all matches found
                     if (matches == deck.length / 2) {
-                        alert('You Win!!!!');
+                        console.log('You win');
+                        clearInterval(gameTimer);
+                        let gameData = document.querySelector('.game-data');
+                        gameData.innerHTML = `<h4>Number of moves = ${moves}</h4>
+                        <h4>Elapsed Time = ${document.getElementById("timer").innerText}</h4><h4>Star Rating = ${document.querySelectorAll('.fa-star').length}</h4>`;
+                        $("#myModal").modal();
                     }
                 } else {
                     // Cards don't match.  Close them after 1 seconds
@@ -146,14 +164,14 @@ function resetMatchGame() {
 }
 
 // Timer
-let counter = 0;
-let gameTimer = setInterval(myTimer, 1000);
+moveCounter = 0;
+gameTimer = setInterval(myTimer, 1000);
 
 function myTimer() {
-    counter++;
+    moveCounter++;
     // Supposedly, (5+'') is faster than String(5) on Chrome for converting numbers to strings.
-    let min=(Math.trunc(counter/60)+ '');
-    let sec=(counter%60 + '')
+    let min=(Math.trunc(moveCounter/60)+ '');
+    let sec=(moveCounter%60 + '')
     document.getElementById("timer").innerText = min + ':' + sec.padStart(2,'0');
 }
 
@@ -166,4 +184,17 @@ restart.addEventListener('click', function () {
     clearInterval(gameTimer);
     createNewDeck();
     resetMatchGame();
+    moveCounter = 0;
+})
+
+// Add event listener to "Play Again" button to create new game
+document.querySelector('#newGame').addEventListener('click', function() {
+    console.log('Play Again button pressed');
+    openCards = [];
+    cards = null;
+    clearInterval(gameTimer);
+    document.getElementById("timer").innerText = '0:00';
+    createNewDeck();
+    resetMatchGame();
+    moveCounter = 0;
 })
