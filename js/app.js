@@ -1,7 +1,17 @@
+
+(function() {
+    'use strict'; // turn on Strict Mode
+
+    /* then start your app/module's code */
+
+
+
 //Global variables
 // Timer
 let secondCounter = 0; // 
 let gameTimer = null;
+
+let cards = null;
 
 /*
  * Create a list that holds all of your cards
@@ -94,7 +104,7 @@ function resetMatchGame() {
     console.log('Entered resetMatchGame');
     let openCards = [];
     let cardsMatch = false; // Flag to indicate if selected cards match
-    let cards = document.querySelectorAll(".card");
+    cards = document.querySelectorAll(".card");
     let matches = 0;
     let moves = 0;
     const moveCounterTag = document.querySelector('.moves');
@@ -205,3 +215,5 @@ document.querySelector('#newGame').addEventListener('click', function () {
     resetMatchGame();
 
 })
+
+}()); // end of file (ends enclosing wrapper for "strict mode")
